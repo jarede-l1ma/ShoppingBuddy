@@ -4,14 +4,14 @@ import Combine
 final class MainViewModel: ObservableObject {
     // MARK: - Published Properties
     @Published var items: [Item] = []
-    @Published var hiddenSections: [ShoppingSection] = []
+    @Published var hiddenSections: [Sections] = []
     @Published var isLoading: Bool = true
     @Published var showDeleteAllAlert: Bool = false
     @Published var showDeleteAlert: Bool = false
     @Published var itemToDelete: Item? = nil
     @Published var editingItem: Item? = nil
     @Published var showInputFields: Bool = false
-    @Published var selectedSection: ShoppingSection = .frozen
+    @Published var selectedSection: Sections = .frozen
     @Published var newItemName: String = ""
     @Published var newItemQuantity: String = ""
     @Published var newItemUnitPrice: String = ""
@@ -32,7 +32,7 @@ final class MainViewModel: ObservableObject {
     }
     
     // MARK: - Public Methods
-    func toggleSectionVisibility(_ section: ShoppingSection) {
+    func toggleSectionVisibility(_ section: Sections) {
         withAnimation {
             if let index = hiddenSections.firstIndex(of: section) {
                 hiddenSections.remove(at: index)
