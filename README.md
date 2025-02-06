@@ -25,7 +25,7 @@
 ### Pré-requisitos
 
 - Xcode 16 ou superior.
-- iOS 16 ou superior.
+- iOS 17 ou superior.
 - Conhecimento básico de Swift e SwiftUI.
 
 ### Passos para Executar
