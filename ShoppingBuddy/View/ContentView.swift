@@ -12,26 +12,26 @@ struct ContentView: View {
                 LoadingView()
             }
         }
-        .alert("Remover item", isPresented: $viewModel.showDeleteAlert) {
-            Button("Cancelar", role: .cancel) {
+        .alert(ButtonsStrings.removeItemAlertTitle.localized, isPresented: $viewModel.showDeleteAlert) {
+            Button(ButtonsStrings.cancelButton.localized, role: .cancel) {
                 viewModel.itemToDelete = nil
             }
-            Button("Remover", role: .destructive) {
+            Button(ButtonsStrings.removeButton.localized, role: .destructive) {
                 viewModel.deleteItem()
             }
         } message: {
-            Text("Tem certeza que deseja remover da lista?")
+            Text(ButtonsStrings.removeItemAlertMessage.localized)
         }
-        .alert("Remover todos os itens", isPresented: $viewModel.showDeleteAllAlert) {
-            Button("Cancelar", role: .cancel) {}
-            Button("Remover", role: .destructive) {
+        .alert(ButtonsStrings.removeAllItemsAlertTitle.localized, isPresented: $viewModel.showDeleteAllAlert) {
+            Button(ButtonsStrings.cancelButton.localized, role: .cancel) {}
+            Button(ButtonsStrings.removeButton.localized, role: .destructive) {
                 withAnimation {
                     viewModel.items.removeAll()
                     viewModel.saveItems()
                 }
             }
         } message: {
-            Text("Tem certeza que deseja remover todos os itens da lista?")
+            Text(ButtonsStrings.removeAllItemsAlertMessage.localized)
         }
     }
     
@@ -90,11 +90,11 @@ struct ContentView: View {
         Group {
             if viewModel.showInputFields {
                 VStack {
-                    TextField("Nome do Produto", text: $viewModel.newItemName)
+                    TextField(TextfieldStrings.productName.localized, text: $viewModel.newItemName)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .overlay(
                             viewModel.showDuplicateItemWarning ?
-                            Text("Item já existe na lista!")
+                            Text(TextfieldStrings.itemAlreadyExists.localized)
                                 .font(.subheadline)
                                 .fontWeight(.medium)
                                 .foregroundColor(.white)
@@ -109,34 +109,34 @@ struct ContentView: View {
                         .modifier(ShakeEffect(animatableData: CGFloat(viewModel.showDuplicateItemWarning ? 1 : 0)))
                         .animation(.interpolatingSpring(stiffness: 300, damping: 15), value: viewModel.showDuplicateItemWarning)
                     
-                    TextField("Quantidade", text: $viewModel.newItemQuantity)
+                    TextField(TextfieldStrings.quantityItem.localized, text: $viewModel.newItemQuantity)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .keyboardType(.numberPad)
                     
-                    TextField("Valor Unitário", text: $viewModel.newItemUnitPrice)
+                    TextField(TextfieldStrings.unitValue.localized, text: $viewModel.newItemUnitPrice)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .keyboardType(.decimalPad)
                     
-                    Picker("Seção", selection: $viewModel.selectedSection) {
-                        ForEach(ShoppingSection.allCases, id: \.self) { section in
-                            Text(section.localizedName).tag(section)
+                    Picker(TextfieldStrings.section.localized, selection: $viewModel.selectedSection) {
+                        ForEach(Sections.allCases, id: \.self) { section in
+                            Text(section.localized).tag(section)
                         }
                     }
                     .pickerStyle(MenuPickerStyle())
                     
                     HStack {
-                        Button(viewModel.editingItem == nil ? "Adicionar" : "Salvar") {
+                        Button(viewModel.editingItem == nil ? ButtonsStrings.addButton.localized : ButtonsStrings.saveButton.localized) {
                             viewModel.editingItem == nil ? viewModel.addItem() : viewModel.updateItem()
                         }
                         .buttonStyle(PrimaryButtonStyle())
                         Spacer()
                         Button(action: { viewModel.clearForm() }) {
-                            Text("Limpar")
+                            Text(ButtonsStrings.clearButton.localized)
                         }
                         .buttonStyle(SecondaryButtonStyle())
                         
                         if viewModel.editingItem != nil {
-                            Button("Cancelar") {
+                            Button(ButtonsStrings.cancelButton.localized) {
                                 viewModel.clearForm()
                                 viewModel.editingItem = nil
                             }
@@ -152,14 +152,14 @@ struct ContentView: View {
     
     private var listView: some View {
         List {
-            ForEach(ShoppingSection.allCases, id: \.self) { section in
+            ForEach(Sections.allCases, id: \.self) { section in
                 sectionView(for: section)
             }
         }
         .animation(.easeInOut, value: viewModel.items)
     }
     
-    private func sectionView(for section: ShoppingSection) -> some View {
+    private func sectionView(for section: Sections) -> some View {
         Section {
             if !viewModel.hiddenSections.contains(section) {
                 ForEach(viewModel.items
@@ -193,7 +193,7 @@ struct ContentView: View {
     }
     
     private var totalView: some View {
-        Text("Total da Compra: \(viewModel.formatCurrency(viewModel.totalPurchasePrice))")
+        Text(ItemRowStrings.purchaseTotal.localized + "\(viewModel.formatCurrency(viewModel.totalPurchasePrice))")
             .font(.headline)
             .padding()
     }

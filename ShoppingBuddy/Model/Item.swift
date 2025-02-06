@@ -6,7 +6,7 @@ struct Item: Identifiable, Codable, Equatable {
     var quantity: Int
     var unitPrice: Double
     var isPurchased: Bool
-    var section: ShoppingSection
+    var section: Sections
     
     init(
         id: UUID = UUID(),
@@ -14,7 +14,7 @@ struct Item: Identifiable, Codable, Equatable {
         quantity: Int,
         unitPrice: Double,
         isPurchased: Bool = false,
-        section: ShoppingSection
+        section: Sections
     ) {
         self.id = id
         self.name = name

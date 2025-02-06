@@ -1,13 +1,13 @@
 import SwiftUI
 
 struct SectionHeaderView: View {
-    let section: ShoppingSection
+    let section: Sections
     let isHidden: Bool
     let onToggle: () -> Void
     
     var body: some View {
         HStack {
-            Text(section.localizedName)
+            Text(section.localized)
                 .font(.headline)
                 .foregroundColor(.white)
                 .padding(.vertical, 8)

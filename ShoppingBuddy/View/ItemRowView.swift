@@ -12,10 +12,10 @@ struct ItemRowView: View {
         HStack {
             VStack(alignment: .leading) {
                 Text(item.name)
-                Text("Quantidade: \(item.quantity)")
+                Text(ItemRowStrings.quantity.localized + "\(item.quantity)")
                 if item.unitPrice > 0 {
-                    Text("Valor Unitário: \(formatCurrency(item.unitPrice))")
-                    Text("Total: \(formatCurrency(item.totalPrice))")
+                    Text(ItemRowStrings.unitValue.localized + "\(formatCurrency(item.unitPrice))")
+                    Text(ItemRowStrings.total.localized + "\(formatCurrency(item.totalPrice))")
                 } else {
                     Text("R$ 0.00")
                 }
@@ -55,6 +55,6 @@ struct ItemRowView: View {
         formatter.locale = Locale(identifier: "pt_BR")
         return formatter.string(
             from: NSNumber(value: value)
-        ) ?? "R$ 0,00"
+        ) ?? "R$ 0.00"
     }
 }
