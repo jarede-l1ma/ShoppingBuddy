@@ -13,18 +13,18 @@ struct ContentView: View {
             }
         }
         .alert(ButtonsStrings.removeItemAlertTitle.localized, isPresented: $viewModel.showDeleteAlert) {
-            Button(ButtonsStrings.cancelButton.localized, role: .cancel) {
+            Button(ButtonsStrings.cancel.localized, role: .cancel) {
                 viewModel.itemToDelete = nil
             }
-            Button(ButtonsStrings.removeButton.localized, role: .destructive) {
+            Button(ButtonsStrings.remove.localized, role: .destructive) {
                 viewModel.deleteItem()
             }
         } message: {
             Text(ButtonsStrings.removeItemAlertMessage.localized)
         }
         .alert(ButtonsStrings.removeAllItemsAlertTitle.localized, isPresented: $viewModel.showDeleteAllAlert) {
-            Button(ButtonsStrings.cancelButton.localized, role: .cancel) {}
-            Button(ButtonsStrings.removeButton.localized, role: .destructive) {
+            Button(ButtonsStrings.cancel.localized, role: .cancel) {}
+            Button(ButtonsStrings.remove.localized, role: .destructive) {
                 withAnimation {
                     viewModel.items.removeAll()
                     viewModel.saveItems()
@@ -125,18 +125,18 @@ struct ContentView: View {
                     .pickerStyle(MenuPickerStyle())
                     
                     HStack {
-                        Button(viewModel.editingItem == nil ? ButtonsStrings.addButton.localized : ButtonsStrings.saveButton.localized) {
+                        Button(viewModel.editingItem == nil ? ButtonsStrings.add.localized : ButtonsStrings.save.localized) {
                             viewModel.editingItem == nil ? viewModel.addItem() : viewModel.updateItem()
                         }
                         .buttonStyle(PrimaryButtonStyle())
                         Spacer()
                         Button(action: { viewModel.clearForm() }) {
-                            Text(ButtonsStrings.clearButton.localized)
+                            Text(ButtonsStrings.clear.localized)
                         }
                         .buttonStyle(SecondaryButtonStyle())
                         
                         if viewModel.editingItem != nil {
-                            Button(ButtonsStrings.cancelButton.localized) {
+                            Button(ButtonsStrings.cancel.localized) {
                                 viewModel.clearForm()
                                 viewModel.editingItem = nil
                             }

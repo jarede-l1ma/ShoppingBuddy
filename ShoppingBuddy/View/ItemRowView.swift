@@ -12,31 +12,20 @@ struct ItemRowView: View {
         HStack {
             VStack(alignment: .leading) {
                 Text(item.name)
+                    .font(.headline)
                 Text(ItemRowStrings.quantity.localized + "\(item.quantity)")
+                    .font(.subheadline)
                 if item.unitPrice > 0 {
                     Text(ItemRowStrings.unitValue.localized + "\(formatCurrency(item.unitPrice))")
+                        .font(.subheadline)
                     Text(ItemRowStrings.total.localized + "\(formatCurrency(item.totalPrice))")
+                        .font(.subheadline)
                 } else {
-                    Text("R$ 0.00")
+                    Text(formatCurrency(0))
+                        .font(.subheadline)
                 }
             }
             Spacer()
-            
-            Image(systemName: item.isPurchased ? "checkmark.circle.fill" : "circle")
-                .onTapGesture(perform: onTogglePurchased)
-                .foregroundColor(item.isPurchased ? .green : .gray)
-            
-            Image(systemName: "pencil")
-                .onTapGesture {
-                    withAnimation(.easeIn) {
-                        onEdit()
-                    }
-                }
-            
-            Image(systemName: "trash")
-                .onTapGesture {
-                    viewModel.confirmDeleteItem(item)
-                }
         }
         .frame(maxWidth: .infinity, minHeight: 60)
         .padding(.horizontal)
@@ -47,14 +36,38 @@ struct ItemRowView: View {
         .shadow(radius: 2)
         .animation(.easeInOut, value: item.isPurchased)
         .contentShape(Rectangle())
+        .swipeActions(edge: .leading, allowsFullSwipe: true) {
+            Button(action: {
+                withAnimation {
+                    onTogglePurchased()
+                }
+            }) {
+                Label(ButtonsStrings.purchased.localized, systemImage: "checkmark.circle.fill")
+                    .foregroundColor(.white)
+            }
+            .tint(item.isPurchased ? .gray : .green)
+        }
+        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+            Button(role: .destructive, action: {
+                onDelete()
+            }) {
+                Label(ButtonsStrings.remove.localized, systemImage: "trash")
+            }
+            
+            Button(action: {
+                onEdit()
+            }) {
+                Label(ButtonsStrings.edit.localized, systemImage: "pencil")
+                    .foregroundColor(.white)
+            }
+            .tint(.blue)
+        }
     }
     
     private func formatCurrency(_ value: Double) -> String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
         formatter.locale = Locale(identifier: "pt_BR")
-        return formatter.string(
-            from: NSNumber(value: value)
-        ) ?? "R$ 0.00"
+        return formatter.string(from: NSNumber(value: value)) ?? "R$ 0,00"
     }
 }

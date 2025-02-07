@@ -1,9 +1,11 @@
 enum ButtonsStrings: String {
-    case cancelButton
-    case removeButton
-    case clearButton
-    case addButton
-    case saveButton
+    case cancel
+    case remove
+    case clear
+    case add
+    case save
+    case purchased
+    case edit
     case removeItemAlertTitle
     case removeItemAlertMessage
     case removeAllItemsAlertTitle
