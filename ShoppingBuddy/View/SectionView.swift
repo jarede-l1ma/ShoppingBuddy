@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct SectionHeaderView: View {
+struct SectionView: View {
     let section: Sections
     let isHidden: Bool
     let onToggle: () -> Void
