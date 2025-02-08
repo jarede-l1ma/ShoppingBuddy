@@ -16,7 +16,7 @@ struct ContentView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                    Text("ShoppingBuddy")
+                    Text(CommonsStrings.appName.localized)
                         .font(.title2)
                         .fontWeight(.bold)
                 }
@@ -71,6 +71,7 @@ struct ContentView: View {
                 Text(ButtonsStrings.removeAllItemsAlertMessage.localized)
             }
         }
+        .padding(.top, 20)
     }
     
     private var mainContentView: some View {
@@ -86,7 +87,7 @@ struct ContentView: View {
     
     private var listView: some View {
         List {
-            ForEach(Sections.allCases, id: \.self) { section in
+            ForEach(viewModel.sectionsWithItems(), id: \.self) { section in
                 sectionView(for: section)
             }
         }
@@ -108,9 +109,11 @@ struct ContentView: View {
                 section: section,
                 isHidden: viewModel.hiddenSections.contains(section),
                 onToggle: { viewModel.toggleSectionVisibility(section) }
-            ).padding(.horizontal, 16)
-            .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+            )
+            .padding(.horizontal, 16)
         }
+        .listRowInsets(EdgeInsets())
+        .listRowSeparator(.automatic)
     }
     
     private func itemRow(for item: Item) -> some View {

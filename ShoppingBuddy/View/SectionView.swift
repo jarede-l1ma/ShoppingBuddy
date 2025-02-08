@@ -4,13 +4,14 @@ struct SectionView: View {
     let section: Sections
     let isHidden: Bool
     let onToggle: () -> Void
+    let cornerRadius: CGFloat = 8.0
     
     var body: some View {
         HStack {
             Text(section.localized)
                 .font(.headline)
                 .foregroundColor(.white)
-                .padding(.vertical, 8)
+                .padding(.vertical, 10)
                 .padding(.horizontal, 12)
             
             Spacer()
@@ -25,7 +26,7 @@ struct SectionView: View {
         }
         .frame(maxWidth: .infinity)
         .background(section.color)
-        .clipShape(RoundedCornersShape(corners: [.topLeft, .topRight], radius: 10))
+        .cornerRadius(cornerRadius, corners: isHidden ? .allCorners : [.topLeft, .topRight])
         .listRowInsets(EdgeInsets())
     }
 }

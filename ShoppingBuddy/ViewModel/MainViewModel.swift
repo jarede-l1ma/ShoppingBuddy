@@ -53,7 +53,6 @@ final class MainViewModel: ObservableObject {
         let itemName = newItemName.trimmingCharacters(in: .whitespacesAndNewlines)
         
         if itemAlreadyExists(name: itemName) {
-            // Trigger animation and show tooltip
             showDuplicateItemWarning = true
             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                 self.showDuplicateItemWarning = false
@@ -165,5 +164,11 @@ final class MainViewModel: ObservableObject {
     
     func itemAlreadyExists(name: String) -> Bool {
         return items.contains { $0.name.lowercased() == name.lowercased() }
+    }
+    
+    func sectionsWithItems() -> [Sections] {
+        return Sections.allCases.filter { section in
+            !items.filter { $0.section == section }.isEmpty
+        }
     }
 }

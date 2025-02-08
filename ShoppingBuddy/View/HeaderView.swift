@@ -5,11 +5,10 @@ struct HeaderView: View {
     
     var body: some View {
         VStack {
-            Text("ShoppingBuddy")
+            Text(CommonsStrings.appName.localized)
                 .font(.largeTitle)
                 .fontWeight(.bold)
                 .padding(.top, 20)
-            
             HStack {
                 Button(action: {
                     withAnimation {
