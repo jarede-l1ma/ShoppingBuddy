@@ -19,7 +19,7 @@ struct InputFieldsView: View {
                                 .background(Color.red.opacity(0.9))
                                 .cornerRadius(8)
                                 .shadow(color: .black.opacity(0.1), radius: 3, x: 0, y: 2)
-                                .offset(y: -45)
+                                .offset(y: -25)
                                 .transition(.scale.combined(with: .opacity))
                             : nil
                         )

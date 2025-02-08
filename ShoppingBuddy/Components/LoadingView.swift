@@ -3,7 +3,7 @@ import SwiftUI
 struct LoadingView: View {
     var body: some View {
         VStack {
-            Text("ShoppingBuddy")
+            Text(CommonsStrings.appName.localized)
                 .font(.largeTitle)
                 .fontWeight(.bold)
                 .padding(.bottom, 20)

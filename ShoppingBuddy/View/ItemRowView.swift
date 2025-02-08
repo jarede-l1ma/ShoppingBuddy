@@ -2,12 +2,12 @@ import SwiftUI
 
 struct ItemRowView: View {
     @ObservedObject var viewModel: MainViewModel
-    
+
     let item: Item
     let onTogglePurchased: () -> Void
     let onEdit: () -> Void
     let onDelete: () -> Void
-    
+
     var body: some View {
         HStack {
             VStack(alignment: .leading) {
@@ -27,7 +27,7 @@ struct ItemRowView: View {
             }
             Spacer()
         }
-        .frame(maxWidth: .infinity, minHeight: 60)
+        .frame(maxWidth: .infinity, minHeight: 75)
         .padding(.horizontal)
         .background(
             item.isPurchased ? Color.green.opacity(0.1) : Color.clear
@@ -53,7 +53,7 @@ struct ItemRowView: View {
             }) {
                 Label(ButtonsStrings.remove.localized, systemImage: "trash")
             }
-            
+
             Button(action: {
                 onEdit()
             }) {
@@ -63,7 +63,7 @@ struct ItemRowView: View {
             .tint(.blue)
         }
     }
-    
+
     private func formatCurrency(_ value: Double) -> String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency

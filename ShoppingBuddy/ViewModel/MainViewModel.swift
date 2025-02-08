@@ -53,7 +53,6 @@ final class MainViewModel: ObservableObject {
         let itemName = newItemName.trimmingCharacters(in: .whitespacesAndNewlines)
         
         if itemAlreadyExists(name: itemName) {
-            // Trigger animation and show tooltip
             showDuplicateItemWarning = true
             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                 self.showDuplicateItemWarning = false

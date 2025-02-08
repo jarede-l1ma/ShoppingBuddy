@@ -16,7 +16,7 @@ struct ContentView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                    Text("ShoppingBuddy")
+                    Text(CommonsStrings.appName.localized)
                         .font(.title2)
                         .fontWeight(.bold)
                 }
@@ -71,6 +71,7 @@ struct ContentView: View {
                 Text(ButtonsStrings.removeAllItemsAlertMessage.localized)
             }
         }
+        .padding(.top, 20)
     }
     
     private var mainContentView: some View {
