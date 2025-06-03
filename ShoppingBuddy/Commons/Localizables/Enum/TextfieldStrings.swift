@@ -4,7 +4,7 @@ enum TextfieldStrings: String {
     case unitValue
     case itemAlreadyExists
     case section
-    
+
     var localized: String {
         String(localized: String.LocalizationValue(self.rawValue), table: "TextfieldStrings")
     }

@@ -10,7 +10,7 @@ enum ButtonsStrings: String {
     case removeItemAlertMessage
     case removeAllItemsAlertTitle
     case removeAllItemsAlertMessage
-    
+
     var localized: String {
         String(localized: String.LocalizationValue(self.rawValue), table: "ButtonStrings")
     }

@@ -13,12 +13,18 @@ enum Sections: String, CaseIterable, Identifiable, Codable {
     case others
     
     var id: String { rawValue }
-    
+
     var localized: String {
         String(localized: String.LocalizationValue(self.rawValue), table: "SectionStrings")
     }
-    
+
     var color: Color {
         Color(UIColor(named: self.rawValue) ?? .clear)
+    }
+
+    static func sortedAlphabetically() -> [Sections] {
+        return allCases.sorted {
+            $0.localized.localizedCompare($1.localized) == .orderedAscending
+        }
     }
 }
