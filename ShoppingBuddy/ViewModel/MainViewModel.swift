@@ -122,7 +122,7 @@ final class MainViewModel: ObservableObject {
     
     func sortItems(_ lhs: Item, _ rhs: Item) -> Bool {
         if lhs.isPurchased == rhs.isPurchased {
-            return lhs.name < rhs.name
+            return lhs.name.localizedCaseInsensitiveCompare(rhs.name) == .orderedAscending
         }
         return !lhs.isPurchased && rhs.isPurchased
     }
@@ -145,12 +145,12 @@ final class MainViewModel: ObservableObject {
             }
         }
     }
-    
+
     func confirmDeleteItem(_ item: Item) {
         itemToDelete = item
         showDeleteAlert = true
     }
-    
+
     func deleteItem() {
         guard let itemToDelete = itemToDelete else { return }
         if let index = items.firstIndex(where: { $0.id == itemToDelete.id }) {
@@ -161,14 +161,18 @@ final class MainViewModel: ObservableObject {
         }
         self.itemToDelete = nil
     }
-    
+
     func itemAlreadyExists(name: String) -> Bool {
         return items.contains { $0.name.lowercased() == name.lowercased() }
     }
-    
+
     func sectionsWithItems() -> [Sections] {
-        return Sections.allCases.filter { section in
-            !items.filter { $0.section == section }.isEmpty
+        let sectionsWithContent = Sections.allCases.filter { section in
+            items.contains { $0.section == section }
+        }
+
+        return sectionsWithContent.sorted {
+            $0.localized.localizedCompare($1.localized) == .orderedAscending
         }
     }
 }
