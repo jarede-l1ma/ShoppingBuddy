@@ -1,5 +1,4 @@
 import Foundation
-
 /// A service class that handles persistent storage of `Item` objects using UserDefaults.
 ///
 /// Implements `PersistenceServiceProtocol` for dependency injection and testing purposes.
