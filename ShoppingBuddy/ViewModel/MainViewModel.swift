@@ -54,7 +54,7 @@ final class MainViewModel: ObservableObject {
         
         if itemAlreadyExists(name: itemName) {
             showDuplicateItemWarning = true
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            DispatchQueue.main.async {
                 self.showDuplicateItemWarning = false
             }
             return
@@ -96,12 +96,14 @@ final class MainViewModel: ObservableObject {
               let index = items.firstIndex(where: { $0.id == editingItem.id }) else { return }
         
         let updatedItem = Item(
+            id: editingItem.id,
             name: newItemName,
             quantity: Int(newItemQuantity) ?? 0,
             unitPrice: Double(newItemUnitPrice) ?? 0.0,
             isPurchased: items[index].isPurchased,
             section: selectedSection
         )
+
         withAnimation {
             items[index] = updatedItem
         }
@@ -112,7 +114,7 @@ final class MainViewModel: ObservableObject {
     
     // MARK: - Private Methods
     private func loadInitialData() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+        DispatchQueue.main.async {
             withAnimation {
                 self.isLoading = false
                 self.items = self.persistenceService.loadItems()
