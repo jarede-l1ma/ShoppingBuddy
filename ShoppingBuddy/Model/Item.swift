@@ -1,5 +1,4 @@
 import Foundation
-
 /// Represents an item in a shopping list or inventory system.
 ///
 /// Conforms to:
@@ -21,13 +20,13 @@ struct Item: Identifiable, Codable, Equatable {
     let id: UUID
     
     /// Name/description of the item (e.g., "Milk", "Eggs")
-    var name: String
+    @NonEmptyName var name: String
     
     /// Quantity of the item (must be positive)
-    var quantity: Int
+    @NonZeroQuantity var quantity: Int
     
     /// Price per unit of the item
-    var unitPrice: Double
+    @PriceAmount var unitPrice: Double
     
     /// Purchase status flag (defaults to false)
     var isPurchased: Bool
@@ -52,9 +51,9 @@ struct Item: Identifiable, Codable, Equatable {
         section: Sections
     ) {
         self.id = id
-        self.name = name
-        self.quantity = quantity
-        self.unitPrice = unitPrice
+        self._name = NonEmptyName(wrappedValue: name)
+        self._quantity = NonZeroQuantity(wrappedValue: quantity)
+        self._unitPrice = PriceAmount(wrappedValue: unitPrice)
         self.isPurchased = isPurchased
         self.section = section
     }
@@ -64,6 +63,25 @@ struct Item: Identifiable, Codable, Equatable {
         Double(quantity) * unitPrice
     }
     
+    /// Compares two `Item` instances for equality.
+    ///
+    /// Two items are considered equal if **all** of the following match:
+    /// - `id`: UUID
+    /// - `name`: String
+    /// - `quantity`: Int
+    /// - `unitPrice`: Double
+    /// - `isPurchased`: Bool
+    /// - `section`: Sections
+    ///
+    /// This method supports Swift's `Equatable` protocol, which allows
+    /// items to be compared directly (e.g., in tests or list updates).
+    ///
+    /// ## Example:
+    /// ```swift
+    /// if itemA == itemB {
+    ///     print("Items are identical.")
+    /// }
+    /// ```
     public static func == (lhs: Item, rhs: Item) -> Bool {
         return lhs.id == rhs.id &&
         lhs.name == rhs.name &&
