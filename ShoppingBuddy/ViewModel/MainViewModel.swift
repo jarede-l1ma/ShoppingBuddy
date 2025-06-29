@@ -16,6 +16,7 @@ final class MainViewModel: ObservableObject {
     @Published var newItemQuantity: String = ""
     @Published var newItemUnitPrice: String = ""
     @Published var showDuplicateItemWarning: Bool = false
+    @Published var showInvalidQuantityWarning: Bool = false
     
     // MARK: - Dependencies
     private let persistenceService: PersistenceServiceProtocol
@@ -54,13 +55,20 @@ final class MainViewModel: ObservableObject {
         
         if itemAlreadyExists(name: itemName) {
             showDuplicateItemWarning = true
-            DispatchQueue.main.async {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                 self.showDuplicateItemWarning = false
             }
             return
         }
         
-        guard let quantity = Int(newItemQuantity) else { return }
+        guard let quantity = Int(newItemQuantity),
+              quantity > 0 else {
+            showInvalidQuantityWarning = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                self.showInvalidQuantityWarning = false
+            }
+            return
+        }
         let newItem = Item(
             name: itemName,
             quantity: quantity,

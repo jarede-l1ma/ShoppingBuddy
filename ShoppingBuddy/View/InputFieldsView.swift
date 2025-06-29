@@ -29,6 +29,8 @@ struct InputFieldsView: View {
                     TextField(TextfieldStrings.quantityItem.localized, text: $viewModel.newItemQuantity)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .keyboardType(.numberPad)
+                        .modifier(ShakeEffect(animatableData: CGFloat(viewModel.showInvalidQuantityWarning ? 1 : 0)))
+                        .animation(.interpolatingSpring(stiffness: 300, damping: 15), value: viewModel.showInvalidQuantityWarning)
                     
                     TextField(TextfieldStrings.unitValue.localized, text: $viewModel.newItemUnitPrice)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
