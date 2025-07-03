@@ -1,5 +1,5 @@
 import Foundation
-/// A service class that handles persistent storage of `Item` objects using UserDefaults.
+/// A service class that handles persistent storage of `Item` objects using FileManager.
 ///
 /// Implements `PersistenceServiceProtocol` for dependency injection and testing purposes.
 /// Uses JSON encoding/decoding to store and retrieve items.
@@ -15,13 +15,13 @@ import Foundation
 /// let loadedItems = persistence.loadItems()
 /// ```
 final class PersistenceService: PersistenceServiceProtocol {
-    /// The UserDefaults instance used for storage
-    private let userDefaults: UserDefaults
+    /// The URL where items will be saved
+    private let fileURL: URL
     
-    /// Initializes the persistence service
-    /// - Parameter userDefaults: The UserDefaults instance to use (defaults to .standard)
-    init(userDefaults: UserDefaults = .standard) {
-        self.userDefaults = userDefaults
+    init(fileName: String = "items.json") {
+        self.fileURL = FileManager.default
+            .urls(for: .documentDirectory, in: .userDomainMask)[0]
+            .appendingPathComponent(fileName)
     }
     
     /// Saves an array of items to persistent storage
@@ -32,8 +32,11 @@ final class PersistenceService: PersistenceServiceProtocol {
     /// - Silently fails if encoding fails (returns without error)
     /// - Overwrites previously saved items
     func saveItems(_ items: [Item]) {
-        if let encodedData = try? JSONEncoder().encode(items) {
-            userDefaults.set(encodedData, forKey: "savedItems")
+        do {
+            let data = try JSONEncoder().encode(items)
+            try data.write(to: fileURL, options: .atomic)
+        } catch {
+            print("❌ Failed to save items:", error)
         }
     }
     
@@ -46,10 +49,12 @@ final class PersistenceService: PersistenceServiceProtocol {
     ///   - Data exists but decoding fails
     /// - Uses JSON decoding for deserialization
     func loadItems() -> [Item] {
-        guard let savedData = userDefaults.data(forKey: "savedItems"),
-              let decodedItems = try? JSONDecoder().decode([Item].self, from: savedData) else {
+        do {
+            let data = try Data(contentsOf: fileURL)
+            return try JSONDecoder().decode([Item].self, from: data)
+        } catch {
+            print("⚠️ Failed to load items:", error)
             return []
         }
-        return decodedItems
     }
 }
