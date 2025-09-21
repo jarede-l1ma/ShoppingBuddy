@@ -30,8 +30,8 @@ struct LoadingView: View {
             // Circular progress indicator
             ProgressView()
                 .progressViewStyle(CircularProgressViewStyle(tint: .blue))
-                .scaleEffect(1.5) // Enlarged 1.5x for better visibility
+                .scaleEffect(1.5)
         }
-        .transition(.opacity) // Fade in/out animation
+        .transition(.opacity)
     }
 }

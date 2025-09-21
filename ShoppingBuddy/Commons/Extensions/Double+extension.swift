@@ -10,7 +10,6 @@ import Foundation
 /// let price = 19.99
 /// price.toCurrency() // Returns "R$ 19,99" (default Brazilian format)
 /// price.toCurrency(localeIdentifier: "en_US") // Returns "$19.99"
-/// price.toCurrency(localeIdentifier: "de_DE") // Returns "19,99 €"
 /// ```
 extension Double {
     func toCurrency(localeIdentifier: String = "pt_BR") -> String {

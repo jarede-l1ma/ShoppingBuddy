@@ -44,6 +44,21 @@ enum Sections: String, CaseIterable, Identifiable, Codable {
     var localized: String {
         String(localized: String.LocalizationValue(self.rawValue), table: "SectionStrings")
     }
+    
+     var icon: String {
+        switch self {
+        case .beverages: return "🥤"
+        case .cleaning: return "🧽"
+        case .condiments: return "🌿"
+        case .dairy: return "🧀"
+        case .frozen: return "❄️"
+        case .fruits: return "🍎"
+        case .hygiene: return "🧻"
+        case .others: return "📦"
+        case .pasta: return "🍝"
+        case .snacks: return "🍪"
+        }
+    }
 
     /// Returns the associated color for the section from the asset catalog
     /// - Falls back to clear color if the named color isn't found

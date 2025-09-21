@@ -31,6 +31,8 @@ enum TextfieldStrings: String {
     /// Localization Key: "itemAlreadyExists"
     case itemAlreadyExists
     
+    case itemQuantityInvalid
+    
     /// Label for section selection field
     /// Localization Key: "section"
     case section

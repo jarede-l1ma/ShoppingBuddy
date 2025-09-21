@@ -1,10 +1,10 @@
 import SwiftUI
 
-struct TotalView: View {
-    @ObservedObject var viewModel: MainViewModel
+struct TotalView<Store: ItemsStoreProtocol>: View {
+    @ObservedObject var itemsStore: Store
     
     var body: some View {
-        Text(ItemRowStrings.purchaseTotal.localized + "\(viewModel.formatCurrency(viewModel.totalPurchasePrice))")
+        Text(ItemRowStrings.purchaseTotal.localized + "\(Formatter.formatCurrency(itemsStore.totalPurchasePrice))")
             .font(.headline)
             .padding()
             .frame(maxWidth: .infinity)

@@ -18,6 +18,23 @@
         }
       }
     },
+    "itemQuantityInvalid" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add a quantity"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adicione a quantidade"
+          }
+        }
+      }
+    },
     "productName" : {
       "extractionState" : "manual",
       "localizations" : {

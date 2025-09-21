@@ -1,7 +1,8 @@
 import SwiftUI
 
-struct HeaderView: View {
-    @ObservedObject var viewModel: MainViewModel
+struct HeaderView<FormViewModel: ItemFormViewModelProtocol, AlertsViewModel: AlertsViewModelProtocol>: View {
+    @ObservedObject var formViewModel: FormViewModel
+    @ObservedObject var alertsViewModel: AlertsViewModel
     
     var body: some View {
         VStack {
@@ -12,30 +13,32 @@ struct HeaderView: View {
             HStack {
                 Button(action: {
                     withAnimation {
-                        viewModel.showInputFields.toggle()
+                        formViewModel.showInputFields.toggle()
                     }
                 }) {
-                    Image(systemName: viewModel.showInputFields ? "xmark" : "plus")
+                    Image(systemName: formViewModel.showInputFields ? "xmark" : "plus")
                         .font(.headline)
                         .foregroundColor(.white)
-                        .padding()
-                        .background(viewModel.showInputFields ? Color.red : Color.blue)
-                        .cornerRadius(10)
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 12.5)
+                        .background(formViewModel.showInputFields ? Color.red : Color.blue)
+                        .cornerRadius(8, corners: .allCorners)
                 }
                 .padding(.leading, 20)
                 
                 Spacer()
                 
-                if !viewModel.showInputFields {
+                if !formViewModel.showInputFields {
                     Button(action: {
-                        viewModel.showDeleteAllAlert = true
+                        alertsViewModel.showDeleteAllAlert = true
                     }) {
                         Image(systemName: "trash")
-                            .font(.title)
+                            .font(.headline)
                             .foregroundColor(.white)
-                            .frame(width: 50, height: 50)
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 10)
                             .background(Color.red)
-                            .cornerRadius(10)
+                            .cornerRadius(8, corners: .allCorners)
                     }
                     .padding(.trailing, 20)
                 }
@@ -43,4 +46,14 @@ struct HeaderView: View {
             .padding(.top, 10)
         }
     }
+}
+
+// MARK: - Preview
+
+#Preview(traits: .sizeThatFitsLayout) {
+    let store = ItemsStore(persistenceService: PersistenceService())
+    let form = ItemFormViewModel(itemsStore: store)
+    let alerts = AlertsViewModel(itemsStore: store)
+    return HeaderView(formViewModel: form, alertsViewModel: alerts)
+        .padding()
 }

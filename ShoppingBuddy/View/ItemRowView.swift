@@ -1,12 +1,10 @@
 import SwiftUI
 
-struct ItemRowView: View {
-    @ObservedObject var viewModel: MainViewModel
+struct ItemRowView<Store: ItemsStoreProtocol, Form: ItemFormViewModelProtocol>: View {
+    @ObservedObject var itemsStore: Store
+    @ObservedObject var formVM: Form
 
     let item: Item
-    let onTogglePurchased: () -> Void
-    let onEdit: () -> Void
-    let onDelete: () -> Void
 
     var body: some View {
         HStack {
@@ -39,7 +37,7 @@ struct ItemRowView: View {
         .swipeActions(edge: .leading, allowsFullSwipe: true) {
             Button(action: {
                 withAnimation {
-                    onTogglePurchased()
+                    itemsStore.togglePurchasedStatus(for: item)
                 }
             }) {
                 Label(ButtonsStrings.purchased.localized, systemImage: "checkmark.circle.fill")
@@ -49,15 +47,16 @@ struct ItemRowView: View {
         }
         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
             Button(role: .destructive, action: {
-                onDelete()
+                itemsStore.removeItem(item)
             }) {
                 Label(ButtonsStrings.remove.localized, systemImage: "trash")
             }
         }
         .onLongPressGesture {
             withAnimation {
-                onEdit()
+                formVM.editItem(item)
             }
         }
     }
 }
+

@@ -1,114 +1,95 @@
 import SwiftUI
+import Combine
 
-struct ContentView: View {
-    @StateObject private var viewModel = MainViewModel()
+struct ContentView<
+    Store: ItemsStoreProtocol,
+    FormVM: ItemFormViewModelProtocol,
+    SectionsVM: SectionsVisibilityViewModelProtocol,
+    AlertsVM: AlertsViewModelProtocol
+>: View {
+
+    @StateObject private var itemsStore: Store
+    @StateObject private var formVM: FormVM
+    @StateObject private var sectionsVM: SectionsVM
+    @StateObject private var alertsVM: AlertsVM
+    
+    // Estado derivado dos publishers do store
+    @State private var items: [Item] = []
+    @State private var isLoading: Bool = true
+    
+    init(itemsStore: Store, formVM: FormVM, sectionsVM: SectionsVM, alertsVM: AlertsVM) {
+        _itemsStore = StateObject(wrappedValue: itemsStore)
+        _formVM = StateObject(wrappedValue: formVM)
+        _sectionsVM = StateObject(wrappedValue: sectionsVM)
+        _alertsVM = StateObject(wrappedValue: alertsVM)
+    }
     
     var body: some View {
         NavigationView {
             ZStack {
                 mainContentView
-                    .opacity(viewModel.isLoading ? 0 : 1)
+                    .opacity(isLoading ? 0 : 1)
                 
-                if viewModel.isLoading {
+                if isLoading {
                     LoadingView()
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .principal) {
-                    Text(CommonsStrings.appName.localized)
-                        .font(.title2)
-                        .fontWeight(.bold)
-                }
-                
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: {
-                        withAnimation {
-                            viewModel.showInputFields.toggle()
-                        }
-                    }) {
-                        Image(systemName: viewModel.showInputFields ? "xmark" : "plus")
-                            .font(.system(size: 20))
-                            .foregroundColor(.white)
-                            .frame(width: 40, height: 40)
-                            .background(viewModel.showInputFields ? Color.red : Color.blue)
-                            .cornerRadius(8)
-                    }
-                }
-                
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: {
-                        viewModel.showDeleteAllAlert = true
-                    }) {
-                        Image(systemName: "trash")
-                            .font(.system(size: 20))
-                            .foregroundColor(.white)
-                            .frame(width: 40, height: 40)
-                            .background(Color.red)
-                            .cornerRadius(8)
-                    }
-                }
-            }
-            .alert(ButtonsStrings.removeItemAlertTitle.localized, isPresented: $viewModel.showDeleteAlert) {
-                Button(ButtonsStrings.cancel.localized, role: .cancel) {
-                    viewModel.itemToDelete = nil
-                }
-                Button(ButtonsStrings.remove.localized, role: .destructive) {
-                    viewModel.deleteItem()
-                }
-            } message: {
-                Text(ButtonsStrings.removeItemAlertMessage.localized)
-            }
-            .alert(ButtonsStrings.removeAllItemsAlertTitle.localized, isPresented: $viewModel.showDeleteAllAlert) {
-                Button(ButtonsStrings.cancel.localized, role: .cancel) {}
-                Button(ButtonsStrings.remove.localized, role: .destructive) {
-                    withAnimation {
-                        viewModel.items.removeAll()
-                        viewModel.saveItems()
-                    }
-                }
-            } message: {
-                Text(ButtonsStrings.removeAllItemsAlertMessage.localized)
+        }
+        .onAppear {
+            itemsStore.loadInitialData()
+        }
+        .onReceive(itemsStore.itemsPublisher) { newItems in
+            withAnimation(.easeInOut) {
+                self.items = newItems
             }
         }
-        .padding(.top, 20)
+        .onReceive(itemsStore.isLoadingPublisher) { loading in
+            withAnimation(.easeInOut) {
+                self.isLoading = loading
+            }
+        }
     }
     
     private var mainContentView: some View {
         VStack {
-            if viewModel.showInputFields {
-                InputFieldsView(viewModel: viewModel)
+            HeaderView(formViewModel: formVM, alertsViewModel: alertsVM)
+            if formVM.showInputFields {
+                InputFieldsView(formVM: formVM)
                     .padding(.top, 20)
             }
             listView
-            TotalView(viewModel: viewModel)
+            TotalView(itemsStore: itemsStore)
         }
     }
     
     private var listView: some View {
-        List {
-            ForEach(viewModel.sectionsWithItems(), id: \.self) { section in
-                sectionView(for: section)
+        let sections = sectionsWithItems()
+        
+        return List {
+            // Use a própria seção como identidade, não o índice
+            ForEach(Array(sections.enumerated()), id: \.element) { (idx, section) in
+                sectionView(for: section, colorIndex: idx, total: sections.count)
             }
         }
         .listStyle(.plain)
-        .animation(.easeInOut, value: viewModel.items)
+        .animation(.easeInOut, value: items)
     }
     
-    private func sectionView(for section: Sections) -> some View {
+    private func sectionView(for section: Sections, colorIndex: Int, total: Int) -> some View {
         Section {
-            if !viewModel.hiddenSections.contains(section) {
-                ForEach(viewModel.items
+            if !sectionsVM.hiddenSections.contains(section) {
+                ForEach(items
                     .filter { $0.section == section }
-                    .sorted(by: viewModel.sortItems), id: \.id) { item in
+                    .sorted(by: itemsStore.sortItems), id: \.id) { item in
                         itemRow(for: item)
                     }
             }
         } header: {
             SectionView(
                 section: section,
-                isHidden: viewModel.hiddenSections.contains(section),
-                onToggle: { viewModel.toggleSectionVisibility(section) }
+                color: SectionColors.colorForVisibleSection(at: colorIndex, total: total),
+                sectionsVM: sectionsVM
             )
             .padding(.horizontal, 16)
         }
@@ -118,13 +99,19 @@ struct ContentView: View {
     
     private func itemRow(for item: Item) -> some View {
         ItemRowView(
-            viewModel: viewModel,
-            item: item,
-            onTogglePurchased: { viewModel.togglePurchasedStatus(for: item)
-            },
-            onEdit: { viewModel.editItem(item) },
-            onDelete: { viewModel.removeItem(item) }
+            itemsStore: itemsStore,
+            formVM: formVM,
+            item: item
         )
         .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+    }
+    
+    private func sectionsWithItems() -> [Sections] {
+        let sectionsWithContent = Sections.allCases.filter { section in
+            items.contains { $0.section == section }
+        }
+        return sectionsWithContent.sorted {
+            $0.localized.localizedCompare($1.localized) == .orderedAscending
+        }
     }
 }
