@@ -17,6 +17,8 @@ final class MainViewModel: ObservableObject {
     @Published var newItemUnitPrice: String = ""
     @Published var showDuplicateItemWarning: Bool = false
     @Published var showInvalidQuantityWarning: Bool = false
+    @Published var invalidQuantityMessage: String = ""
+    @Published var duplicateItemMessage: String = ""
     
     // MARK: - Dependencies
     private let persistenceService: PersistenceServiceProtocol
@@ -183,6 +185,19 @@ final class MainViewModel: ObservableObject {
 
         return sectionsWithContent.sorted {
             $0.localized.localizedCompare($1.localized) == .orderedAscending
+        }
+    }
+    
+    func showQuantityWarning(_ message: String) {
+        invalidQuantityMessage = message
+        withAnimation {
+            showInvalidQuantityWarning = true
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            withAnimation {
+                self.showInvalidQuantityWarning = false
+            }
         }
     }
 }
