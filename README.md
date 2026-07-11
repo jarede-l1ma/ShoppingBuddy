@@ -1,49 +1,65 @@
-## ShoppingBuddy
-ShoppingBuddy is an iOS application designed to simplify your shopping experience. With an intuitive interface and powerful features, the app helps you create shopping lists, compare prices, and find the best deals at nearby stores. All built with the elegance and performance of SwiftUI and organized following the MVVM pattern.
+# 🛒 ShoppingBuddy
 
-## Key Features
-Shopping List Creation: Easily create and manage shopping lists
+ShoppingBuddy is a modern, lightweight iOS application designed to simplify your shopping experience. With an intuitive and highly performant interface, the app helps you create shopping lists, organize items by categories, track prices, and calculate your total purchase cost in real-time. 
 
-Price Comparison: Compare prices across different stores
+Built natively with **SwiftUI** and architected following modern iOS 17+ standards, the project relies exclusively on the new **Observation Framework** for state management, delivering a fast, robust, and clean codebase without relying on legacy reactive bindings.
 
-Store Locator: Find nearby stores with the best deals
+---
 
-Smart Recommendations: Get suggestions based on your shopping habits
+## ✨ Key Features
 
-Local Storage: Your data is safely stored locally on your device
+- **Shopping List Creation**: Easily create, edit, and manage multiple items in your shopping list.
+- **Price Calculation**: Add quantities and unit prices to instantly track your cart's total value in real-time.
+- **Smart Categorization**: Organize your products into visually distinct sections (e.g., Dairy, Fruits, Beverages, Cleaning, etc.).
+- **Background Persistence**: Your data is safely stored locally on your device in JSON format, with a highly optimized non-blocking background save process (I/O Debounce).
+- **Interactive UI**: Fluid animations, native swipe actions for checking/deleting items, and easy collapsible sections.
 
-Technologies Used
-Language: Swift
+---
 
-UI Framework: SwiftUI
+## 🛠 Technologies & Architecture
 
-Architecture: MVVM (Model-View-ViewModel)
+- **Language**: Swift 6
+- **UI Framework**: SwiftUI
+- **Architecture**: MVVM (Model-View-ViewModel)
+- **State Management**: Observation Framework (`@Observable`) — *100% free of Combine/ObservableObject!*
+- **Data Persistence**: FileManager (JSON) with Background `Task.detached` & Debounce mechanism for UI performance.
+- **Concurrency**: Swift Concurrency (`async/await` and `Task`).
+- **Dependency Management**: Swift Package Manager
 
-Data Persistence: FileManager (JSON)
+---
 
-Reactive Programming: Combine
+## 🚀 Getting Started
 
-Dependency Management: Swift Package Manager
+### Prerequisites
+- Xcode 15 or later (Recommended: **Xcode 16+**)
+- iOS 17.0 or later
 
-## Getting Started
-Prerequisites
-Xcode 16 or later
+### Installation Steps
 
-iOS 17 or later
+1. Clone the repository to your local machine:
+   ```bash
+   git clone https://github.com/jarede-l1ma/ShoppingBuddy.git
+   ```
+2. Open the project in Xcode:
+   ```bash
+   cd ShoppingBuddy
+   open ShoppingBuddy.xcodeproj
+   ```
+3. Select an iOS 17+ Simulator or your physical device.
+4. Hit `Cmd + R` (Build and Run) to test the app!
 
-Basic knowledge of Swift and SwiftUI
+---
 
-## Installation Steps
-Clone the repository:
+## ⚙️ Configuration
+No additional configuration is required for basic functionality. The application handles all file directory creations on the device automatically for storing your items. 
 
-bash
-git clone https://github.com/jarede-l1ma/ShoppingBuddy.git
-Open the project in Xcode
+---
 
-Build and run on your simulator or device
+## 🧪 Testing
+The project includes automated Unit Tests and Integration Tests covering core functionalities (Model behaviors, ViewModels, and Persistence). 
+- To run the tests, simply press `Cmd + U` inside Xcode.
 
-## Configuration
-No additional configuration is required for basic functionality. For advanced features like store location services, ensure you have location permissions enabled.
+---
 
-## License
+## 📄 License
 This project is licensed under the MIT License - see the LICENSE file for details.
