@@ -1,26 +1,25 @@
 import Foundation
 import SwiftUI
-import Combine
 
-@MainActor
-final class ItemFormViewModel: ObservableObject {
+@Observable @MainActor
+final class ItemFormViewModel {
     // Campos e estado do formulário
-    @Published var editingItem: Item? = nil
-    @Published var showInputFields: Bool = false
-    @Published var selectedSection: Sections = .frozen
-    @Published var newItemName: String = ""
-    @Published var newItemQuantity: String = ""
-    @Published var newItemUnitPrice: String = ""
+    var editingItem: Item? = nil
+    var showInputFields: Bool = false
+    var selectedSection: Sections = .frozen
+    var newItemName: String = ""
+    var newItemQuantity: String = ""
+    var newItemUnitPrice: String = ""
     
     // Validações/avisos
-    @Published var showDuplicateItemWarning: Bool = false
-    @Published var showInvalidQuantityWarning: Bool = false
-    @Published var invalidQuantityMessage: String = ""
-    @Published var duplicateItemMessage: String = ""
+    var showDuplicateItemWarning: Bool = false
+    var showInvalidQuantityWarning: Bool = false
+    var invalidQuantityMessage: String = ""
+    var duplicateItemMessage: String = ""
     
-    private let itemsStore: any ItemsStoreProtocol
+    private let itemsStore: ItemsStore
     
-    init(itemsStore: any ItemsStoreProtocol) {
+    init(itemsStore: ItemsStore) {
         self.itemsStore = itemsStore
     }
     
@@ -100,38 +99,5 @@ final class ItemFormViewModel: ObservableObject {
                 self.showInvalidQuantityWarning = false
             }
         }
-    }
-}
-
-extension ItemFormViewModel: ItemFormViewModelProtocol {
-    var editingItemPublisher: AnyPublisher<Item?, Never> {
-        $editingItem.eraseToAnyPublisher()
-    }
-    var showInputFieldsPublisher: AnyPublisher<Bool, Never> {
-        $showInputFields.eraseToAnyPublisher()
-    }
-    var selectedSectionPublisher: AnyPublisher<Sections, Never> {
-        $selectedSection.eraseToAnyPublisher()
-    }
-    var newItemNamePublisher: AnyPublisher<String, Never> {
-        $newItemName.eraseToAnyPublisher()
-    }
-    var newItemQuantityPublisher: AnyPublisher<String, Never> {
-        $newItemQuantity.eraseToAnyPublisher()
-    }
-    var newItemUnitPricePublisher: AnyPublisher<String, Never> {
-        $newItemUnitPrice.eraseToAnyPublisher()
-    }
-    var showDuplicateItemWarningPublisher: AnyPublisher<Bool, Never> {
-        $showDuplicateItemWarning.eraseToAnyPublisher()
-    }
-    var showInvalidQuantityWarningPublisher: AnyPublisher<Bool, Never> {
-        $showInvalidQuantityWarning.eraseToAnyPublisher()
-    }
-    var invalidQuantityMessagePublisher: AnyPublisher<String, Never> {
-        $invalidQuantityMessage.eraseToAnyPublisher()
-    }
-    var duplicateItemMessagePublisher: AnyPublisher<String, Never> {
-        $duplicateItemMessage.eraseToAnyPublisher()
     }
 }

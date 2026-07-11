@@ -1,22 +1,17 @@
 import Foundation
 import SwiftUI
-import Combine
 
-@MainActor
-final class ItemsStore: ObservableObject {
-    @Published private(set) var items: [Item] = []
-    @Published private(set) var isLoading: Bool = true
+@Observable @MainActor
+final class ItemsStore {
+    private(set) var items: [Item] = []
+    private(set) var isLoading: Bool = true
     
     private let persistenceService: PersistenceServiceProtocol
     
     init(persistenceService: PersistenceServiceProtocol) {
         self.persistenceService = persistenceService
     }
-}
-
-extension ItemsStore: ItemsStoreProtocol {
-    var itemsPublisher: AnyPublisher<[Item], Never> { $items.eraseToAnyPublisher() }
-    var isLoadingPublisher: AnyPublisher<Bool, Never> { $isLoading.eraseToAnyPublisher() }
+    
     var totalPurchasePrice: Double {
         items.reduce(0) { $0 + $1.totalPrice }
     }
@@ -52,6 +47,13 @@ extension ItemsStore: ItemsStoreProtocol {
                 items.remove(at: index)
                 saveItems()
             }
+        }
+    }
+    
+    func removeAllItems() {
+        withAnimation {
+            items.removeAll()
+            saveItems()
         }
     }
     

@@ -1,52 +1,42 @@
 import SwiftUI
-import Combine
 
-struct ContentView<
-    Store: ItemsStoreProtocol,
-    FormVM: ItemFormViewModelProtocol,
-    SectionsVM: SectionsVisibilityViewModelProtocol,
-    AlertsVM: AlertsViewModelProtocol
->: View {
-
-    @StateObject private var itemsStore: Store
-    @StateObject private var formVM: FormVM
-    @StateObject private var sectionsVM: SectionsVM
-    @StateObject private var alertsVM: AlertsVM
-    
-    // Estado derivado dos publishers do store
-    @State private var items: [Item] = []
-    @State private var isLoading: Bool = true
-    
-    init(itemsStore: Store, formVM: FormVM, sectionsVM: SectionsVM, alertsVM: AlertsVM) {
-        _itemsStore = StateObject(wrappedValue: itemsStore)
-        _formVM = StateObject(wrappedValue: formVM)
-        _sectionsVM = StateObject(wrappedValue: sectionsVM)
-        _alertsVM = StateObject(wrappedValue: alertsVM)
-    }
+struct ContentView: View {
+    var itemsStore: ItemsStore
+    var formVM: ItemFormViewModel
+    var sectionsVM: SectionsVisibilityViewModel
+    @Bindable var alertsVM: AlertsViewModel
     
     var body: some View {
         NavigationView {
             ZStack {
                 mainContentView
-                    .opacity(isLoading ? 0 : 1)
+                    .opacity(itemsStore.isLoading ? 0 : 1)
                 
-                if isLoading {
+                if itemsStore.isLoading {
                     LoadingView()
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
         }
-        .onAppear {
+        .task {
             itemsStore.loadInitialData()
         }
-        .onReceive(itemsStore.itemsPublisher) { newItems in
-            withAnimation(.easeInOut) {
-                self.items = newItems
+        .alert(ButtonsStrings.removeAllItemsAlertTitle.localized, isPresented: $alertsVM.showDeleteAllAlert) {
+            Button(ButtonsStrings.cancel.localized, role: .cancel) { }
+            Button(ButtonsStrings.remove.localized, role: .destructive) {
+                itemsStore.removeAllItems()
             }
+        } message: {
+            Text(ButtonsStrings.removeAllItemsAlertMessage.localized)
         }
-        .onReceive(itemsStore.isLoadingPublisher) { loading in
-            withAnimation(.easeInOut) {
-                self.isLoading = loading
+        .alert(ButtonsStrings.removeItemAlertTitle.localized, isPresented: $alertsVM.showDeleteAlert) {
+            Button(ButtonsStrings.cancel.localized, role: .cancel) { }
+            Button(ButtonsStrings.remove.localized, role: .destructive) {
+                alertsVM.deleteItem()
+            }
+        } message: {
+            if let item = alertsVM.itemToDelete {
+                Text(String(format: ButtonsStrings.removeItemAlertMessage.localized, item.name))
             }
         }
     }
@@ -67,19 +57,18 @@ struct ContentView<
         let sections = sectionsWithItems()
         
         return List {
-            // Use a própria seção como identidade, não o índice
             ForEach(Array(sections.enumerated()), id: \.element) { (idx, section) in
                 sectionView(for: section, colorIndex: idx, total: sections.count)
             }
         }
         .listStyle(.plain)
-        .animation(.easeInOut, value: items)
+        .animation(.easeInOut, value: itemsStore.items)
     }
     
     private func sectionView(for section: Sections, colorIndex: Int, total: Int) -> some View {
         Section {
             if !sectionsVM.hiddenSections.contains(section) {
-                ForEach(items
+                ForEach(itemsStore.items
                     .filter { $0.section == section }
                     .sorted(by: itemsStore.sortItems), id: \.id) { item in
                         itemRow(for: item)
@@ -108,7 +97,7 @@ struct ContentView<
     
     private func sectionsWithItems() -> [Sections] {
         let sectionsWithContent = Sections.allCases.filter { section in
-            items.contains { $0.section == section }
+            itemsStore.items.contains { $0.section == section }
         }
         return sectionsWithContent.sorted {
             $0.localized.localizedCompare($1.localized) == .orderedAscending

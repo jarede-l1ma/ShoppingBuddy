@@ -1,9 +1,9 @@
 import SwiftUI
 
-struct SectionView<VM: SectionsVisibilityViewModelProtocol>: View {
+struct SectionView: View {
     let section: Sections
     let color: Color
-    @ObservedObject var sectionsVM: VM
+    var sectionsVM: SectionsVisibilityViewModel
     let cornerRadius: CGFloat = 8.0
     
     private var isHidden: Bool {

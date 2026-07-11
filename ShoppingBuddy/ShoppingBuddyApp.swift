@@ -2,18 +2,18 @@ import SwiftUI
 
 @main
 struct ShoppingBuddyApp: App {
-    private let itemsStore: ItemsStore
-    private let formVM: ItemFormViewModel
-    private let sectionsVM: SectionsVisibilityViewModel
-    private let alertsVM: AlertsViewModel
+    @State private var itemsStore: ItemsStore
+    @State private var formVM: ItemFormViewModel
+    @State private var sectionsVM: SectionsVisibilityViewModel
+    @State private var alertsVM: AlertsViewModel
 
     init() {
         let persistence = PersistenceService()
         let store = ItemsStore(persistenceService: persistence)
-        self.itemsStore = store
-        self.formVM = ItemFormViewModel(itemsStore: store)
-        self.sectionsVM = SectionsVisibilityViewModel()
-        self.alertsVM = AlertsViewModel(itemsStore: store)
+        _itemsStore = State(initialValue: store)
+        _formVM = State(initialValue: ItemFormViewModel(itemsStore: store))
+        _sectionsVM = State(initialValue: SectionsVisibilityViewModel())
+        _alertsVM = State(initialValue: AlertsViewModel(itemsStore: store))
     }
 
     var body: some Scene {
@@ -26,20 +26,4 @@ struct ShoppingBuddyApp: App {
             )
         }
     }
-}
-
-// MARK: - Preview
-
-#Preview {
-    let persistence = PersistenceService()
-    let store = ItemsStore(persistenceService: persistence)
-    let form = ItemFormViewModel(itemsStore: store)
-    let sections = SectionsVisibilityViewModel()
-    let alerts = AlertsViewModel(itemsStore: store)
-    return ContentView(
-        itemsStore: store,
-        formVM: form,
-        sectionsVM: sections,
-        alertsVM: alerts
-    )
 }

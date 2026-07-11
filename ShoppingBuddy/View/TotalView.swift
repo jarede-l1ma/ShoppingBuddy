@@ -1,7 +1,7 @@
 import SwiftUI
 
-struct TotalView<Store: ItemsStoreProtocol>: View {
-    @ObservedObject var itemsStore: Store
+struct TotalView: View {
+    var itemsStore: ItemsStore
     
     var body: some View {
         Text(ItemRowStrings.purchaseTotal.localized + "\(Formatter.formatCurrency(itemsStore.totalPurchasePrice))")

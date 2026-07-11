@@ -1,7 +1,7 @@
 import SwiftUI
 
-struct InputFieldsView<VM: ItemFormViewModelProtocol>: View {
-    @ObservedObject var formVM: VM
+struct InputFieldsView: View {
+    @Bindable var formVM: ItemFormViewModel
     
     var body: some View {
         Group {

@@ -1,9 +1,9 @@
 import Foundation
 import SwiftUI
-import Combine
 
-final class SectionsVisibilityViewModel: ObservableObject {
-    @Published var hiddenSections: [Sections] = []
+@Observable @MainActor
+final class SectionsVisibilityViewModel {
+    var hiddenSections: [Sections] = []
     
     func toggleSectionVisibility(_ section: Sections) {
         withAnimation {
@@ -14,8 +14,4 @@ final class SectionsVisibilityViewModel: ObservableObject {
             }
         }
     }
-}
-
-extension SectionsVisibilityViewModel: SectionsVisibilityViewModelProtocol {
-    var hiddenSectionsPublisher: AnyPublisher<[Sections], Never> { $hiddenSections.eraseToAnyPublisher() }
 }

@@ -1,26 +1,19 @@
 import Foundation
-import Combine
 import SwiftUI
 
-@MainActor
-final class AlertsViewModel: ObservableObject {
-    @Published var showDeleteAllAlert: Bool = false
-    @Published var showDeleteAlert: Bool = false
-    @Published var itemToDelete: Item? = nil
+@Observable @MainActor
+final class AlertsViewModel {
+    var showDeleteAllAlert: Bool = false
+    var showDeleteAlert: Bool = false
+    var itemToDelete: Item? = nil
     
-    private let itemsStore: any ItemsStoreProtocol
+    private let itemsStore: ItemsStore
     
-    init(itemsStore: any ItemsStoreProtocol) {
+    init(itemsStore: ItemsStore) {
         self.itemsStore = itemsStore
     }
-}
 
-extension AlertsViewModel: AlertsViewModelProtocol {
-    var showDeleteAllAlertPublisher: AnyPublisher<Bool, Never> { $showDeleteAllAlert.eraseToAnyPublisher() }
-    var showDeleteAlertPublisher: AnyPublisher<Bool, Never> { $showDeleteAlert.eraseToAnyPublisher() }
-    var itemToDeletePublisher: AnyPublisher<Item?, Never> { $itemToDelete.eraseToAnyPublisher() }
-    
-     func confirmDeleteItem(_ item: Item) {
+    func confirmDeleteItem(_ item: Item) {
         itemToDelete = item
         showDeleteAlert = true
     }

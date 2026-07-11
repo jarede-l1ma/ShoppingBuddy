@@ -82,12 +82,4 @@ struct Item: Identifiable, Codable, Equatable {
     ///     print("Items are identical.")
     /// }
     /// ```
-    public static func == (lhs: Item, rhs: Item) -> Bool {
-        return lhs.id == rhs.id &&
-        lhs.name == rhs.name &&
-        lhs.quantity == rhs.quantity &&
-        lhs.unitPrice == rhs.unitPrice &&
-        lhs.isPurchased == rhs.isPurchased &&
-        lhs.section == rhs.section
-    }
 }

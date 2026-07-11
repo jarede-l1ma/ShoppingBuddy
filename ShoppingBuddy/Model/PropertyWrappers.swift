@@ -12,7 +12,7 @@
 /// print(name) // "Unnamed"
 /// ```
 @propertyWrapper
-struct NonEmptyName {
+struct NonEmptyName: Equatable {
     private var value: String
     
     var wrappedValue: String {
@@ -38,7 +38,7 @@ struct NonEmptyName {
 /// print(price) // 0.0
 /// ```
 @propertyWrapper
-struct PriceAmount {
+struct PriceAmount: Equatable {
     private var value: Double
     
     var wrappedValue: Double {
@@ -65,7 +65,7 @@ struct PriceAmount {
 /// print(quantity) // 1
 /// ```
 @propertyWrapper
-struct NonZeroQuantity {
+struct NonZeroQuantity: Equatable {
     private var value: Int
     
     var wrappedValue: Int {
@@ -84,7 +84,7 @@ struct NonZeroQuantity {
 /// allowing it to be encoded and decoded as a plain `String`.
 ///
 /// This ensures compatibility when serializing models
-/// that use `Capitalized` for user-friendly data handling.
+/// that use `NonEmptyName` for user-friendly data handling.
 extension NonEmptyName: Codable {
     init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
@@ -119,8 +119,8 @@ extension PriceAmount: Codable {
 /// Conforms `NonZeroQuantity` to the `Codable` protocol,
 /// enabling seamless encoding and decoding of its internal `Int` value.
 ///
-/// This is useful when persisting models that use `PositiveInteger`
-/// in JSON, property lists, UserDefaults, etc.
+/// This is useful when persisting models that use `NonZeroQuantity`
+/// in JSON, property lists, etc.
 extension NonZeroQuantity: Codable {
     init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()

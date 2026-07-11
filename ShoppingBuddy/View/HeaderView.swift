@@ -1,8 +1,8 @@
 import SwiftUI
 
-struct HeaderView<FormViewModel: ItemFormViewModelProtocol, AlertsViewModel: AlertsViewModelProtocol>: View {
-    @ObservedObject var formViewModel: FormViewModel
-    @ObservedObject var alertsViewModel: AlertsViewModel
+struct HeaderView: View {
+    var formViewModel: ItemFormViewModel
+    var alertsViewModel: AlertsViewModel
     
     var body: some View {
         VStack {

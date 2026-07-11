@@ -1,8 +1,8 @@
 import SwiftUI
 
-struct ItemRowView<Store: ItemsStoreProtocol, Form: ItemFormViewModelProtocol>: View {
-    @ObservedObject var itemsStore: Store
-    @ObservedObject var formVM: Form
+struct ItemRowView: View {
+    var itemsStore: ItemsStore
+    var formVM: ItemFormViewModel
 
     let item: Item
 

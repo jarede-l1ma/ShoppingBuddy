@@ -18,6 +18,9 @@ final class PersistenceService: PersistenceServiceProtocol {
     /// The URL where items will be saved
     private let fileURL: URL
     
+    /// Task handle for debouncing save operations
+    private var saveTask: Task<Void, Never>?
+    
     init(fileName: String = "items.json") {
         self.fileURL = FileManager.default
             .urls(for: .documentDirectory, in: .userDomainMask)[0]
@@ -32,11 +35,20 @@ final class PersistenceService: PersistenceServiceProtocol {
     /// - Silently fails if encoding fails (returns without error)
     /// - Overwrites previously saved items
     func saveItems(_ items: [Item]) {
-        do {
-            let data = try JSONEncoder().encode(items)
-            try data.write(to: fileURL, options: .atomic)
-        } catch {
-            print("❌ Failed to save items:", error)
+        saveTask?.cancel()
+        saveTask = Task.detached(priority: .background) { [fileURL] in
+            do {
+                // Debounce de 0.5 segundos
+                try await Task.sleep(nanoseconds: 500_000_000)
+                if Task.isCancelled { return }
+                
+                let data = try JSONEncoder().encode(items)
+                try data.write(to: fileURL, options: .atomic)
+            } catch {
+                if !(error is CancellationError) {
+                    print("❌ Failed to save items:", error)
+                }
+            }
         }
     }
     

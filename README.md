@@ -10,7 +10,7 @@ Store Locator: Find nearby stores with the best deals
 
 Smart Recommendations: Get suggestions based on your shopping habits
 
-Multi-device Sync: Access your lists from any Apple device
+Local Storage: Your data is safely stored locally on your device
 
 Technologies Used
 Language: Swift
@@ -19,7 +19,7 @@ UI Framework: SwiftUI
 
 Architecture: MVVM (Model-View-ViewModel)
 
-Data Persistence: UserDefaults
+Data Persistence: FileManager (JSON)
 
 Reactive Programming: Combine
 
