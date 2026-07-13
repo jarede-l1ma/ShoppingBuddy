@@ -4,12 +4,14 @@ import SwiftUI
 @Observable @MainActor
 final class ItemsStore {
     private(set) var items: [Item] = []
-    private(set) var isLoading: Bool = true
     
-    private let persistenceService: PersistenceServiceProtocol
+    private var databaseService: DatabaseServiceProtocol
     
-    init(persistenceService: PersistenceServiceProtocol) {
-        self.persistenceService = persistenceService
+    init(databaseService: DatabaseServiceProtocol = FirestoreService()) {
+        self.databaseService = databaseService
+        self.databaseService.onUpdate = { [weak self] items in
+            self?.items = items
+        }
     }
     
     var totalPurchasePrice: Double {
@@ -17,44 +19,26 @@ final class ItemsStore {
     }
     
     func loadInitialData() {
-        Task {
-            let loadedItems = await Task.detached(priority: .userInitiated) { [persistenceService] in
-                persistenceService.loadItems()
-            }.value
-            
-            withAnimation {
-                self.items = loadedItems
-                self.isLoading = false
-            }
-        }
+        databaseService.startListening()
     }
     
     func saveItems() {
-        persistenceService.saveItems(items)
+        // Obsolete in the context of Firestore, replaced by direct calls
     }
     
     func togglePurchasedStatus(for item: Item) {
-        guard let index = items.firstIndex(where: { $0.id == item.id }) else { return }
-        withAnimation(.spring()) {
-            items[index].isPurchased.toggle()
-            saveItems()
-        }
+        guard items.firstIndex(where: { $0.id == item.id }) != nil else { return }
+        var updatedItem = item
+        updatedItem.isPurchased.toggle()
+        databaseService.saveItem(updatedItem)
     }
     
     func removeItem(_ item: Item) {
-        if let index = items.firstIndex(where: { $0.id == item.id }) {
-            withAnimation {
-                items.remove(at: index)
-                saveItems()
-            }
-        }
+        databaseService.deleteItem(item)
     }
     
     func removeAllItems() {
-        withAnimation {
-            items.removeAll()
-            saveItems()
-        }
+        databaseService.deleteAllItems(items)
     }
     
     func itemAlreadyExists(name: String) -> Bool {
@@ -69,18 +53,11 @@ final class ItemsStore {
     }
     
     func addItem(_ item: Item) {
-        withAnimation {
-            items.append(item)
-        }
-        saveItems()
+        databaseService.saveItem(item)
     }
     
     func updateItem(_ item: Item) {
-        guard let index = items.firstIndex(where: { $0.id == item.id }) else { return }
-        withAnimation {
-            items[index] = item
-        }
-        saveItems()
+        databaseService.saveItem(item)
     }
     
     func item(withID id: UUID) -> Item? {

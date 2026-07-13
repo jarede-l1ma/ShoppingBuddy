@@ -1,27 +1,58 @@
 import SwiftUI
 
 struct ContentView: View {
-    var itemsStore: ItemsStore
-    var formVM: ItemFormViewModel
-    var sectionsVM: SectionsVisibilityViewModel
-    @Bindable var alertsVM: AlertsViewModel
+    @Environment(ItemsStore.self) private var itemsStore
+    @Environment(ItemFormViewModel.self) private var formVM
+    @Environment(SectionsVisibilityViewModel.self) private var sectionsVM
+    @Environment(AlertsViewModel.self) private var alertsVM
+    
+    @State private var biometricManager = BiometricManager()
     
     var body: some View {
+        @Bindable var bindableAlertsVM = alertsVM
+        
         NavigationView {
             ZStack {
-                mainContentView
-                    .opacity(itemsStore.isLoading ? 0 : 1)
-                
-                if itemsStore.isLoading {
-                    LoadingView()
+                if biometricManager.isUnlocked {
+                    mainContentView
+                } else {
+                    VStack(spacing: 20) {
+                        Image(systemName: "lock.fill")
+                            .font(.system(size: 60))
+                            .foregroundColor(.blue)
+                        Text(CommonsStrings.appLockedTitle.localized)
+                            .font(.largeTitle)
+                            .fontWeight(.bold)
+                        Text(CommonsStrings.appLockedMessage.localized)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal)
+                        
+                        if let error = biometricManager.errorDescription {
+                            Text(error)
+                                .foregroundColor(.red)
+                                .font(.footnote)
+                                .padding(.top, 10)
+                        }
+                        
+                        Button(ButtonsStrings.tryAgain.localized) {
+                            biometricManager.authenticate()
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .padding(.top)
+                    }
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
         }
         .task {
-            itemsStore.loadInitialData()
+            biometricManager.authenticate()
         }
-        .alert(ButtonsStrings.removeAllItemsAlertTitle.localized, isPresented: $alertsVM.showDeleteAllAlert) {
+        .onChange(of: biometricManager.isUnlocked) { _, isUnlocked in
+            if isUnlocked {
+                itemsStore.loadInitialData()
+            }
+        }
+        .alert(ButtonsStrings.removeAllItemsAlertTitle.localized, isPresented: $bindableAlertsVM.showDeleteAllAlert) {
             Button(ButtonsStrings.cancel.localized, role: .cancel) { }
             Button(ButtonsStrings.remove.localized, role: .destructive) {
                 itemsStore.removeAllItems()
@@ -29,7 +60,7 @@ struct ContentView: View {
         } message: {
             Text(ButtonsStrings.removeAllItemsAlertMessage.localized)
         }
-        .alert(ButtonsStrings.removeItemAlertTitle.localized, isPresented: $alertsVM.showDeleteAlert) {
+        .alert(ButtonsStrings.removeItemAlertTitle.localized, isPresented: $bindableAlertsVM.showDeleteAlert) {
             Button(ButtonsStrings.cancel.localized, role: .cancel) { }
             Button(ButtonsStrings.remove.localized, role: .destructive) {
                 alertsVM.deleteItem()
@@ -43,13 +74,16 @@ struct ContentView: View {
     
     private var mainContentView: some View {
         VStack {
-            HeaderView(formViewModel: formVM, alertsViewModel: alertsVM)
+            HeaderView()
             if formVM.showInputFields {
-                InputFieldsView(formVM: formVM)
+                InputFieldsView()
                     .padding(.top, 20)
             }
             listView
-            TotalView(itemsStore: itemsStore)
+            TotalView()
+        }
+        .onTapGesture {
+            hideKeyboard()
         }
     }
     
@@ -62,6 +96,7 @@ struct ContentView: View {
             }
         }
         .listStyle(.plain)
+        .scrollDismissesKeyboard(.interactively)
         .animation(.easeInOut, value: itemsStore.items)
     }
     
@@ -77,8 +112,7 @@ struct ContentView: View {
         } header: {
             SectionView(
                 section: section,
-                color: SectionColors.colorForVisibleSection(at: colorIndex, total: total),
-                sectionsVM: sectionsVM
+                color: SectionColors.colorForVisibleSection(at: colorIndex, total: total)
             )
             .padding(.horizontal, 16)
         }
@@ -87,11 +121,7 @@ struct ContentView: View {
     }
     
     private func itemRow(for item: Item) -> some View {
-        ItemRowView(
-            itemsStore: itemsStore,
-            formVM: formVM,
-            item: item
-        )
+        ItemRowView(item: item)
         .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
     }
     

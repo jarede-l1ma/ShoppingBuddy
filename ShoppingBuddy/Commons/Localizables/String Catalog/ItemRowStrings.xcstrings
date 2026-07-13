@@ -1,74 +1,159 @@
 {
-  "sourceLanguage" : "en",
-  "strings" : {
-    "purchaseTotal" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Purchase Total: "
+  "sourceLanguage": "en",
+  "strings": {
+    "purchaseTotal": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Purchase Total: "
           }
         },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Total da Compra: "
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Total da Compra: "
           }
         }
       }
     },
-    "quantity" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Quantity: "
+    "quantity": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quantity: "
           }
         },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Quantidade: "
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quantidade: "
           }
         }
       }
     },
-    "total" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Total: "
+    "total": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Total: "
           }
         },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Total: "
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Total: "
           }
         }
       }
     },
-    "unitValue" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unit value: "
+    "unitValue": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unit value: "
           }
         },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Valor unitário: "
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Valor unitário: "
+          }
+        }
+      }
+    },
+    "accessibilityValueFormat": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ items, totaling %@."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ itens, totalizando %@."
+          }
+        }
+      }
+    },
+    "accessibilityStatePurchased": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Purchased."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Comprado."
+          }
+        }
+      }
+    },
+    "accessibilityStateNotPurchased": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not purchased."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Não comprado."
+          }
+        }
+      }
+    },
+    "accessibilityHint": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Swipe right to mark as purchased, swipe left to delete, or hold to edit."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deslize para a direita para marcar como comprado, deslize para a esquerda para excluir, ou segure para editar."
+          }
+        }
+      }
+    },
+    "totalPurchaseValueLabel": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Total purchase value"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Valor total da compra"
           }
         }
       }
     }
   },
-  "version" : "1.0"
+  "version": "1.0"
 }

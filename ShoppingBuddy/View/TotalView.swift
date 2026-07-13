@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct TotalView: View {
-    var itemsStore: ItemsStore
+    @Environment(ItemsStore.self) private var itemsStore
     
     var body: some View {
         Text(ItemRowStrings.purchaseTotal.localized + "\(Formatter.formatCurrency(itemsStore.totalPurchasePrice))")
@@ -17,5 +17,8 @@ struct TotalView: View {
                 .cornerRadius(10)
             )
             .padding(.horizontal, 10)
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel(ItemRowStrings.totalPurchaseValueLabel.localized)
+            .accessibilityValue(Formatter.formatCurrency(itemsStore.totalPurchasePrice))
     }
 }

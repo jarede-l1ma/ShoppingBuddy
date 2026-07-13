@@ -3,7 +3,7 @@ import SwiftUI
 
 @Observable @MainActor
 final class ItemFormViewModel {
-    // Campos e estado do formulário
+    // Form fields and state
     var editingItem: Item? = nil
     var showInputFields: Bool = false
     var selectedSection: Sections = .frozen
@@ -11,7 +11,7 @@ final class ItemFormViewModel {
     var newItemQuantity: String = ""
     var newItemUnitPrice: String = ""
     
-    // Validações/avisos
+    // Validations/Warnings
     var showDuplicateItemWarning: Bool = false
     var showInvalidQuantityWarning: Bool = false
     var invalidQuantityMessage: String = ""

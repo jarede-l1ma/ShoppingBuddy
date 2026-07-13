@@ -1,7 +1,7 @@
 import SwiftUI
 
-/// Paleta fixa igual à da sua imagem (Pastel: Sunrise)
-/// Mantida para visualização e fallback discreto, mas a app usará o gradiente dinâmico.
+/// Fixed palette matching your image (Pastel: Sunrise)
+/// Kept for visualization and as a subtle fallback, but the app will use the dynamic gradient.
 private let pastelSunrisePalette: [Color] = [
     Color(hex: "#FCF0C4"), // Beverages
     Color(hex: "#FBE3C6"), // Cleaning
@@ -47,20 +47,20 @@ struct SectionColors: View {
     }
 }
 
-// MARK: - API pública para fornecer cores dinâmicas às Views da aplicação
+// MARK: - Public API to provide dynamic colors to application Views
 extension SectionColors {
-    /// Cor dinâmica baseada no índice e no total de seções visíveis.
-    /// Gera uma transição suave (gradiente) usando âncoras em HSB.
+    /// Dynamic color based on the index and the total number of visible sections.
+    /// Generates a smooth transition (gradient) using HSB anchors.
     static func colorForVisibleSection(at index: Int, total: Int) -> Color {
         gradientColor(for: index, total: total)
     }
     
-    /// Retorna uma cor por gradiente suave entre três âncoras (amarelo pastel → rosa/lilás pastel → azul pastel).
+    /// Returns a color via a smooth gradient between three anchors (pastel yellow → pastel pink/lilac → pastel blue).
     static func gradientColor(for index: Int, total: Int) -> Color {
         let anchors: [(hue: Double, sat: Double, bright: Double)] = [
-            (0.13, 0.22, 0.99), // amarelo pastel
-            (0.95, 0.18, 0.98), // rosa/lilás pastel
-            (0.58, 0.22, 0.99)  // azul pastel
+            (0.13, 0.22, 0.99), // pastel yellow
+            (0.95, 0.18, 0.98), // pastel pink/lilac
+            (0.58, 0.22, 0.99)  // pastel blue
         ]
         
         let totalSteps = max(total - 1, 1)
@@ -73,7 +73,7 @@ extension SectionColors {
         }
     }
     
-    /// Fallback discreto por índice (cicla a paleta fixa).
+    /// Discreet fallback by index (cycles through the fixed palette).
     static func paletteColor(forIndex index: Int) -> Color {
         pastelSunrisePalette[safe: index % max(pastelSunrisePalette.count, 1)] ?? .gray
     }

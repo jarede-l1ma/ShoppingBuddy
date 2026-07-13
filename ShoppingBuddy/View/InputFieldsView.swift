@@ -1,9 +1,11 @@
 import SwiftUI
 
 struct InputFieldsView: View {
-    @Bindable var formVM: ItemFormViewModel
+    @Environment(ItemFormViewModel.self) private var environmentFormVM
     
     var body: some View {
+        @Bindable var formVM = environmentFormVM
+        
         Group {
             if formVM.showInputFields {
                 VStack {
@@ -89,7 +91,7 @@ struct InputFieldsView: View {
 // MARK: - Preview
 
 #Preview("InputFieldsView - Campos Visíveis") {
-    let store = ItemsStore(persistenceService: PersistenceService())
+    let store = ItemsStore()
     let vm = ItemFormViewModel(itemsStore: store)
     vm.showInputFields = true
     vm.newItemName = "Abacate"
@@ -98,7 +100,8 @@ struct InputFieldsView: View {
     vm.selectedSection = .fruits
     vm.showInvalidQuantityWarning = true
     vm.invalidQuantityMessage = "Informe a quantidade!"
-    return InputFieldsView(formVM: vm)
+    return InputFieldsView()
+        .environment(vm)
         .padding()
         .background(Color(.systemGroupedBackground))
 }
