@@ -21,6 +21,13 @@ enum CommonsStrings: String {
     /// - Default Value: "ShoppingBuddy" (or raw value)
     case appName
     
+    case appLockedTitle
+    case appLockedMessage
+    
+    case biometricReason
+    case authenticationFailed
+    case biometricsUnavailable
+    
     /// Returns the localized version of the common string
     /// - Uses the "CommonsStrings" strings table for localization
     /// - Returns the raw value if no localized string is found

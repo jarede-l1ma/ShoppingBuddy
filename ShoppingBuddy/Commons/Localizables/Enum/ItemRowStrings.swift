@@ -24,6 +24,14 @@ enum ItemRowStrings: String {
     /// Label for purchased items total section
     case purchaseTotal
     
+    // MARK: - Accessibility
+    
+    case accessibilityValueFormat
+    case accessibilityStatePurchased
+    case accessibilityStateNotPurchased
+    case accessibilityHint
+    case totalPurchaseValueLabel
+    
     /// Returns the localized string from the ItemRowStrings table
     var localized: String {
         String(localized: String.LocalizationValue(self.rawValue), table: "ItemRowStrings")

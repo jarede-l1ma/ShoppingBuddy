@@ -1,8 +1,8 @@
 import SwiftUI
 
 struct ItemRowView: View {
-    var itemsStore: ItemsStore
-    var formVM: ItemFormViewModel
+    @Environment(ItemsStore.self) private var itemsStore
+    @Environment(ItemFormViewModel.self) private var formVM
 
     let item: Item
 
@@ -25,6 +25,10 @@ struct ItemRowView: View {
             }
             Spacer()
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(item.name)
+        .accessibilityValue(String(format: ItemRowStrings.accessibilityValueFormat.localized, String(item.quantity), item.totalPrice.toCurrency()) + " " + (item.isPurchased ? ItemRowStrings.accessibilityStatePurchased.localized : ItemRowStrings.accessibilityStateNotPurchased.localized))
+        .accessibilityHint(ItemRowStrings.accessibilityHint.localized)
         .frame(maxWidth: .infinity, minHeight: 75)
         .padding(.horizontal)
         .background(

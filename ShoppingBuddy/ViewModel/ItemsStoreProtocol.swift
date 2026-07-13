@@ -10,7 +10,7 @@ protocol ItemsStoreProtocol: ObservableObject {
     // Leitura derivada
     var totalPurchasePrice: Double { get }
     
-    // Operações
+    // Operations
     func loadInitialData()
     func saveItems()
     func togglePurchasedStatus(for item: Item)
@@ -18,7 +18,7 @@ protocol ItemsStoreProtocol: ObservableObject {
     func itemAlreadyExists(name: String) -> Bool
     func sortItems(_ lhs: Item, _ rhs: Item) -> Bool
     
-    // Mutação direta de itens (para o formulário)
+    // Direct item mutation (for the form)
     func addItem(_ item: Item)
     func updateItem(_ item: Item)
     func item(withID id: UUID) -> Item?

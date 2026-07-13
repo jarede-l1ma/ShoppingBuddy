@@ -1,0 +1,28 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Regra Global: Nega tudo por padrão
+    match /{document=**} {
+      allow read, write: if false;
+    }
+    
+    // Regras Específicas: Escopo do Usuário
+    match /users/{userId} {
+      // Usuário pode ler e escrever apenas no seu próprio documento base (opcional)
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      
+      // Usuário pode ler e escrever apenas na sua própria lista de compras
+      match /shopping_list/{itemId} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+    }
+    
+    // Lista fallback apenas para propósitos de teste automatizado
+    // ATENÇÃO: Em produção estrita, isso deve ser removido!
+    match /fallback_list/{itemId} {
+      allow read, write: if true;
+    }
+  }
+}

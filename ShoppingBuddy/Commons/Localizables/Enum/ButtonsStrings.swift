@@ -25,6 +25,7 @@ enum ButtonsStrings: String {
     case save
     case purchased
     case edit
+    case tryAgain
     
     // MARK: - Alert Messages
     

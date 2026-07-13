@@ -3,7 +3,7 @@ import SwiftUI
 struct SectionView: View {
     let section: Sections
     let color: Color
-    var sectionsVM: SectionsVisibilityViewModel
+    @Environment(SectionsVisibilityViewModel.self) private var sectionsVM
     let cornerRadius: CGFloat = 8.0
     
     private var isHidden: Bool {
@@ -32,6 +32,7 @@ struct SectionView: View {
                     .background(Color.white.opacity(0.2))
                     .clipShape(Circle())
             }
+            .accessibilityLabel(isHidden ? "Expandir seção \(section.localized)" : "Recolher seção \(section.localized)")
         }
         .frame(maxWidth: .infinity)
         .background(color)

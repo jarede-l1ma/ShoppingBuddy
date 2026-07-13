@@ -22,8 +22,6 @@ struct SectionsTests {
 
     @Test
     func localized_shouldReturnLocalizedValue() {
-        // NOTE: This test assumes localization works as expected and is set up properly in your project.
-        // We'll just test that a non-empty string is returned for each section.
         for section in Sections.allCases {
             let localized = section.localized
             #expect(!localized.isEmpty)
@@ -31,11 +29,10 @@ struct SectionsTests {
     }
 
     @Test
-    func color_shouldReturnNonNilColor() {
+    func color_shouldExistInAssetCatalog() {
         for section in Sections.allCases {
-            let color = section.color
-            // UIColor.clear fallback is possible, but we should always get a valid Color object
-            #expect(color is Color)
+            let uiColor = UIColor(named: section.rawValue)
+            #expect(uiColor != nil, "A cor para a seção '\(section.rawValue)' está faltando no Asset Catalog.")
         }
     }
 

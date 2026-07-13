@@ -1,8 +1,8 @@
 import SwiftUI
 
 struct HeaderView: View {
-    var formViewModel: ItemFormViewModel
-    var alertsViewModel: AlertsViewModel
+    @Environment(ItemFormViewModel.self) private var formViewModel
+    @Environment(AlertsViewModel.self) private var alertsViewModel
     
     var body: some View {
         VStack {
@@ -51,9 +51,11 @@ struct HeaderView: View {
 // MARK: - Preview
 
 #Preview(traits: .sizeThatFitsLayout) {
-    let store = ItemsStore(persistenceService: PersistenceService())
+    let store = ItemsStore()
     let form = ItemFormViewModel(itemsStore: store)
     let alerts = AlertsViewModel(itemsStore: store)
-    return HeaderView(formViewModel: form, alertsViewModel: alerts)
+    HeaderView()
+        .environment(form)
+        .environment(alerts)
         .padding()
 }

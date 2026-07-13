@@ -27,7 +27,7 @@ protocol ItemFormViewModelProtocol: ObservableObject {
     var invalidQuantityMessagePublisher: AnyPublisher<String, Never> { get }
     var duplicateItemMessagePublisher: AnyPublisher<String, Never> { get }
     
-    // Ações
+    // Actions
     func addItem()
     func editItem(_ item: Item)
     func updateItem()
